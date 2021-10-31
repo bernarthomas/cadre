@@ -1,0 +1,21 @@
+{
+    "name": "bt/cadre",
+    "description": "Fournit un cadre pour implémenter un site web",
+    "type": "package",
+    "license": "GNU GENERAL PUBLIC LICENSE Version 3",
+    "authors": [
+        {
+            "name": "Thomas",
+            "email": "bernarthomas@free.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "bt\\cadre\\": "vendor/bt/cadre/"
+        }
+    }
+}

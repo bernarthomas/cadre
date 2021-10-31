@@ -2,7 +2,7 @@
     "name": "bernarthomas/cadre",
     "description": "Fournit un cadre pour implémenter un site web",
     "type": "package",
-    "license": "GNU GENERAL PUBLIC LICENSE Version 3",
+    "license": "GNU GENERAL PUBLIC LICENSE",
     "authors": [
         {
             "name": "Thomas",

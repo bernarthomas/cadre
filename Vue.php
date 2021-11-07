@@ -4,11 +4,13 @@ namespace Cadre;
 
 class Vue
 {
-    private $cheminFichier;
+    private string $cheminFichier;
 
-    private $donnees;
+    private array $templates;
 
-    public function __construct($cheminFichier, $donnees)
+    private array $donnees;
+
+    public function __construct(string $cheminFichier, array $templates, array $donnees)
     {
         $this->cheminFichier = $cheminFichier;
         $this->donnees = $donnees;
@@ -19,9 +21,13 @@ class Vue
         $cheminProjet = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
         ob_start();
         extract($this->donnees);
-        include 'template/base_avant_body.phtml';
-        include $cheminProjet . $this->cheminFichier;
-        include 'template/base_apres_body.phtml';
+        if (empty($this->templates)) {
+            throw new \Exception('Aucun template n\a été trouvé.');
+        }
+        foreach($this->templates as $template)
+        {
+            include $template;
+        }
         $codePhp = ob_get_clean();
         $codePhpModifie = str_replace(['"'], ['\"'], $codePhp);
         $motifs = ['/<.+?>/', '/{%.+?%}/', '/{{.+?}}/'];

@@ -1,32 +1,55 @@
 <?php
-
+/**
+ * Classe Vue moteur de template php
+ */
 namespace Cadre;
 
+use Exception;
+
+/**
+ * Classe Vue moteur de template php
+ */
 class Vue
 {
-    private string $cheminFichier;
-
+    /**
+     * Liste des templates dans leur ordre d'inclusion
+     *
+     * @var array
+     */
     private array $templates;
 
+    /**
+     * @var array
+     */
     private array $donnees;
 
-    public function __construct(string $cheminFichier, array $templates, array $donnees)
+    /**
+     * Constructeur
+     *
+     * @param array $templates
+     * @param array $donnees
+     */
+    public function __construct(array $templates, array $donnees)
     {
-        $this->cheminFichier = $cheminFichier;
+        $this->templates = $templates;
         $this->donnees = $donnees;
     }
 
-    public function affiche()
+    /**
+     * Méthode d'affiche des templates avec interprétation php
+     *
+     * @param bool $debug
+     * @throws Exception
+     */
+    public function affiche(bool $debug = false)
     {
-        $cheminProjet = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
         ob_start();
         extract($this->donnees);
         if (empty($this->templates)) {
-            throw new \Exception('Aucun template n\a été trouvé.');
+            throw new Exception('Aucun template n\a été trouvé.');
         }
-        foreach($this->templates as $template)
-        {
-            include $template;
+        foreach ($this->templates as $template) {
+            include_once $template;
         }
         $codePhp = ob_get_clean();
         $codePhpModifie = str_replace(['"'], ['\"'], $codePhp);
@@ -36,8 +59,9 @@ class Vue
         $codePhpModifie = str_replace(['{{ ', '{%', ' }}', ' %}'], ['', '', '', ''], $codePhpModifie);
         $codePhpModifie = substr($codePhpModifie, 5);
         $codePhpModifie = substr($codePhpModifie, 0, -3);
-//        var_dump($codePhpModifie);
+        if (true === $debug) {
+            var_dump($codePhpModifie);
+        }
         eval($codePhpModifie);
     }
-
 }

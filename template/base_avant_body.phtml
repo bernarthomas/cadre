@@ -4,9 +4,9 @@
         <meta charset="UTF-8">
         <title>{{ $titre }}</title>
         {% if (!empty($styles)) { %}
-        {% foreach ($styles as $style) { %}
+            {% foreach ($styles as $style) { %}
         <link rel="stylesheet" href="$style">
-        {% } %}
+            {% } %}
         {% } %}
     </head>
     <body>

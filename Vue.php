@@ -16,7 +16,7 @@ class Vue
      *
      * @var string
      */
-    private array $template;
+    private string $template;
 
     /**
      * @var array

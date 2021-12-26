@@ -14,9 +14,9 @@ class Vue
     /**
      * Liste des templates dans leur ordre d'inclusion
      *
-     * @var array
+     * @var string
      */
-    private array $templates;
+    private array $template;
 
     /**
      * @var array
@@ -26,12 +26,12 @@ class Vue
     /**
      * Constructeur
      *
-     * @param array $templates
+     * @param string $template
      * @param array $donnees
      */
-    public function __construct(array $templates, array $donnees)
+    public function __construct(string $template, array $donnees)
     {
-        $this->templates = $templates;
+        $this->template = $template;
         $this->donnees = $donnees;
     }
 
@@ -45,12 +45,10 @@ class Vue
     {
         ob_start();
         extract($this->donnees);
-        if (empty($this->templates)) {
+        if (empty($this->template)) {
             throw new Exception('Aucun template n\a été trouvé.');
         }
-        foreach ($this->templates as $template) {
-            include_once $template;
-        }
+        include_once $this->template;
         $codePhp = ob_get_clean();
         $codePhpModifie = str_replace(['"'], ['\"'], $codePhp);
         $motifs = ['/<.+?>/', '/{%.+?%}/', '/{{.+?}}/'];

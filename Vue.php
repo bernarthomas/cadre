@@ -14,9 +14,9 @@ class Vue
     /**
      * Liste des templates dans leur ordre d'inclusion
      *
-     * @var string
+     * @var array
      */
-    private string $template;
+    private array $templates;
 
     /**
      * @var array
@@ -26,12 +26,12 @@ class Vue
     /**
      * Constructeur
      *
-     * @param string $template
+     * @param array $templates
      * @param array $donnees
      */
-    public function __construct(string $template, array $donnees)
+    public function __construct(array $templates, array $donnees)
     {
-        $this->template = $template;
+        $this->templates = $templates;
         $this->donnees = $donnees;
     }
 
@@ -45,10 +45,12 @@ class Vue
     {
         ob_start();
         extract($this->donnees);
-        if (empty($this->template)) {
+        if (empty($this->templates)) {
             throw new Exception('Aucun template n\a été trouvé.');
         }
-        include_once $this->template;
+        foreach ($this->templates as $template) {
+            include_once $template;
+        }
         $codePhp = ob_get_clean();
         $codePhpModifie = str_replace(['"'], ['\"'], $codePhp);
         $motifs = ['/<.+?>/', '/{%.+?%}/', '/{{.+?}}/'];
@@ -58,7 +60,9 @@ class Vue
         $codePhpModifie = substr($codePhpModifie, 5);
         $codePhpModifie = substr($codePhpModifie, 0, -3);
         if (true === $debug) {
-            var_dump($codePhpModifie);
+            file_put_contents(dirname(dirname(dirname(__DIR__))) . '/var/log/getDefinedVars.json', json_encode(get_defined_vars()));
+            file_put_contents(dirname(dirname(dirname(__DIR__))) . '/var/log/codePhp.php', $codePhp);
+            file_put_contents(dirname(dirname(dirname(__DIR__))) . '/var/log/codePhpModifie.php', $codePhpModifie);
         }
         eval($codePhpModifie);
     }
